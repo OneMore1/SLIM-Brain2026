@@ -8,7 +8,11 @@
 
 </div>
 
-This repository contains the official implementation of SLIM-Brain. SLIM-Brain is a two-stage, selective-compute pipeline for voxel-level fMRI representation learning. A lightweight global branch ranks informative temporal windows; a high-capacity 4D Hiera–JEPA encoder processes only those windows, focusing compute on brain voxels and drastically reducing memory.
+This repository contains the official implementation of SLIM-Brain. SLIM-Brain is a two-stage, selective-compute pipeline for voxel-level fMRI representation learning. A lightweight global branch ranks informative temporal windows; a high-capacity 4D Hiera–JEPA encoder processes only those windows, focusing compute on brain voxels and drastically reducing memory. 
+
+**You can exclusively use the second stage as a 4D fMRI encoder for downstream tasks.**
+
+
 
 
 <p align="center">
