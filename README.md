@@ -2,7 +2,7 @@
 
 <div align="center">
   
-[![arXiv](https://img.shields.io/badge/arXiv-23xx.xxxxx-b31b1b.svg?style=flat-square)](https://www.arxiv.org/abs/2512.21881)
+[![arXiv](https://img.shields.io/badge/arXiv-2512.21881-b31b1b.svg?style=flat-square)](https://www.arxiv.org/abs/2512.21881)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=flat-square&logo=github)](https://github.com/OneMore1/SLIM-Brain2026)
 [![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Models-blue)](https://huggingface.co/OneMore1/Slim-Brain)
 
@@ -80,7 +80,7 @@ sh scripts/finetune.sh
 
 #### Model Checkpoints
 
-Our pre-trained model weights can be found in the checkpoints directory:  `./checkpoints/best_model.pth`
+Our pre-trained model weights can be found in https://huggingface.co/OneMore1/Slim-Brain
 
 
 
