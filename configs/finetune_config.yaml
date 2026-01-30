@@ -1,0 +1,106 @@
+experiment:
+  name: "finetune_classification"
+  output_dir: "./output/hiera_finetune"
+  seed: 44
+  resume: null  # Path to checkpoint to resume from 
+  pretrained_checkpoint: "/vePFS-0x0d/home/yewh/Hiera_MAE/checkpoint/checkpoint_epoch_39.pth"
+
+# --- Task Settings ---
+task:
+  task_type: "regression"  # "classification" or "regression"
+  num_classes: 1  # Number of classes for classification (e.g., 2 for binary classification)
+  mean: 33.9289
+  std: 21.5580
+  csv: "/vePFS-0x0d/home/yewh/data_csv/RBC-NKI.csv"  # CSV with columns: Subject, DX_GROUP (for classification) or age (for regression)
+
+# --- Data Settings ---
+data:
+  data_root: "/vePFS-0x0d/fmri-data/WAR_NPYZ"
+  datasets: ["HCP"]
+  train_split_suffixes: ["train_40"]
+  val_split_suffixes: ["val_40"]
+  test_split_suffixes: ["test_40"]
+  input_seq_len: 40  # Temporal length to crop (T dimension)
+
+  # Data dimensions (D, H, W, T) -> will be permuted to (T, D, H, W)
+  spatial_dims: [96, 96, 96]  # D, H, W
+
+  # DataLoader settings
+  batch_size: 2  # Per GPU batch size (can be larger than pretraining)
+  num_workers: 4
+  pin_memory: true
+  prefetch_factor: 2
+
+# --- Model Settings ---
+model:
+  # Input configuration
+  input_size: [40, 96, 96, 96]  # [T, D, H, W]
+  in_chans: 1
+
+  # Patch embedding configuration
+  patch_kernel: [1, 4, 4, 4]  # [T, D, H, W]
+  patch_stride: [1, 4, 4, 4]  # [T, D, H, W]
+  patch_padding: [0, 0, 0, 0]  # [T, D, H, W]
+
+  # Hiera architecture
+  embed_dim: 64  
+  num_heads: 1   
+  stages: [2, 3, 16, 3]  
+  q_pool: 2      
+  q_stride: [2, 2, 2, 2]  # Stride for q_pool [T, D, H, W]
+  mask_unit_size: [8, 8, 8, 8]  # Mask unit size [T, D, H, W]
+  mlp_ratio: 4.0  
+  mask_unit_attn: [true, true, False, False]
+
+# --- Training Settings ---
+training:
+  # Optimization
+  optimizer: "adamw"
+  learning_rate: 1.0e-4  # Lower learning rate for fine-tuning
+  head_lr: 5.0e-4  # Higher learning rate for classification head
+  layer_decay: 0.75
+  weight_decay: 0.05
+  betas: [0.9, 0.99]
+
+  # Learning rate schedule
+  lr_scheduler: "cosine"
+  warmup_epochs: 2  # Warmup epochs
+
+  # Weight freezing
+  freeze_encoder: true  # Set to true to freeze the entire encoder and only train the head
+  min_lr: 1.0e-6  # Minimum learning rate at the end of schedule
+
+  # Training duration
+  epochs: 200
+
+  # Gradient settings
+  clip_grad: 1.0  # Gradient clipping value, null to disable
+  accum_iter: 8  # Gradient accumulation steps (usually 1 for fine-tuning)
+
+  # Mixed precision
+  use_amp: true  # Use automatic mixed precision
+
+# --- Distributed Training Settings ---
+distributed:
+  backend: "nccl"
+  init_method: "env://"
+  world_size: -1  # Will be set automatically
+  rank: -1  # Will be set automatically
+  dist_url: "env://"
+
+# --- Logging Settings ---
+logging:
+  print_freq: 40  # Print frequency (iterations)
+  log_freq: 40  # Log frequency (iterations)
+  save_freq: 5  # Checkpoint save frequency (epochs)
+
+  # Weights & Biases
+  use_wandb: false
+  wandb_project: "hiera_fmri_finetune"
+  wandb_entity: null  # Your wandb username/team
+
+# --- Validation Settings ---
+validation:
+  val_freq: 1  # Validation frequency (epochs)
+  save_best: true  # Save best model based on validation metric
+
