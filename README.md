@@ -68,7 +68,6 @@ task:
 data:
   data_root: /path/to/data_root
   datasets: ["HCP"]
-  mode: "directory"
 ```
 
 3. Start downstream training:
