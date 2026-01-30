@@ -16,4 +16,4 @@ jobs:
       - name: Push to hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-        run: git push https://OneMore1:$HF_TOKEN@huggingface.co/OneMore1/Slim-Brain main
+        run: git push --force https://OneMore1:$HF_TOKEN@huggingface.co/spaces/OneMore1/Slim-Brain main
